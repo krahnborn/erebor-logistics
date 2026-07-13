@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Admin-managed standard merchant onboarding step definitions.</description>
+    <label>Standard Onboarding Step</label>
+    <pluralLabel>Standard Onboarding Steps</pluralLabel>
+    <visibility>Public</visibility>
+</CustomObject>
