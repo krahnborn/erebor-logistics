@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Importance__c</fullName>
+    <description>Business importance of the field for data cleanup prioritization.</description>
+    <label>Importance</label>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Critical</fullName>
+                <default>false</default>
+                <label>Critical</label>
+            </value>
+            <value>
+                <fullName>Nice-to-have</fullName>
+                <default>true</default>
+                <label>Nice-to-have</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

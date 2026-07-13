@@ -1,0 +1,52 @@
+<template>
+    <lightning-card title="Data Quality" icon-name="standard:record">
+        <template lwc:if={score}>
+            <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+                <div class="score-header">
+                    <div>
+                        <div class="score-value">{score.score}%</div>
+                        <div class="score-caption">{score.completeRules} of {score.totalRules} checks complete</div>
+                    </div>
+                    <lightning-badge label={score.status} class={statusClass}></lightning-badge>
+                </div>
+
+                <div class={meterClass} aria-label="Data quality score">
+                    <span style={meterStyle}></span>
+                </div>
+
+                <template lwc:if={score.hasRules}>
+                    <ul class="rule-list">
+                        <template for:each={score.items} for:item="item">
+                            <li key={item.fieldApiName} class={item.rowClass}>
+                                <lightning-icon icon-name={item.iconName} size="x-small" variant={item.iconVariant}></lightning-icon>
+                                <div class="rule-body">
+                                    <div class="rule-title">
+                                        <span>{item.fieldLabel}</span>
+                                        <span class={item.importanceClass}>{item.importance}</span>
+                                    </div>
+                                    <div class="rule-meta">{item.message} · Weight {item.weight}</div>
+                                </div>
+                            </li>
+                        </template>
+                    </ul>
+                </template>
+
+                <template lwc:else>
+                    <div class="empty-state">No active Account data quality rules are configured.</div>
+                </template>
+            </div>
+        </template>
+
+        <template lwc:elseif={errorMessage}>
+            <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+                <div class="empty-state">{errorMessage}</div>
+            </div>
+        </template>
+
+        <template lwc:else>
+            <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+                <lightning-spinner alternative-text="Loading data quality score" size="small"></lightning-spinner>
+            </div>
+        </template>
+    </lightning-card>
+</template>
