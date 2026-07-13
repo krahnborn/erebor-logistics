@@ -64,6 +64,51 @@
                                     <template lwc:if={step.blockedReason}>
                                         <div class="blocked-reason">{step.blockedReason}</div>
                                     </template>
+                                    <div class="step-actions">
+                                        <lightning-combobox
+                                            class="status-control"
+                                            data-id={step.id}
+                                            label="Status"
+                                            value={step.status}
+                                            options={statusOptions}
+                                            onchange={handleStatusChange}
+                                            disabled={step.isUpdating}
+                                            variant="label-hidden"
+                                        ></lightning-combobox>
+                                        <lightning-button
+                                            data-id={step.id}
+                                            label="Start"
+                                            variant="neutral"
+                                            icon-name="utility:play"
+                                            onclick={handleMarkInProgress}
+                                            disabled={step.isUpdating}
+                                        ></lightning-button>
+                                        <lightning-button
+                                            data-id={step.id}
+                                            label={step.actionLabel}
+                                            variant="brand"
+                                            icon-name="utility:check"
+                                            onclick={handleMarkDone}
+                                            disabled={step.completeDisabled}
+                                        ></lightning-button>
+                                    </div>
+                                    <div class={step.blockedReasonInputClass}>
+                                        <lightning-textarea
+                                            data-id={step.id}
+                                            label="Blocked reason"
+                                            value={step.blockedReason}
+                                            onchange={handleBlockedReasonChange}
+                                            disabled={step.isUpdating}
+                                        ></lightning-textarea>
+                                        <lightning-button
+                                            data-id={step.id}
+                                            label="Save blocker"
+                                            variant="neutral"
+                                            icon-name="utility:save"
+                                            onclick={handleSaveBlockedReason}
+                                            disabled={step.isUpdating}
+                                        ></lightning-button>
+                                    </div>
                                 </div>
                             </li>
                         </template>

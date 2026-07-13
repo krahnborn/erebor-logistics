@@ -1,5 +1,11 @@
 public with sharing class MerchantOnboardingController {
     private static final Integer STALLED_DAYS = 3;
+    private static final Set<String> VALID_STATUSES = new Set<String>{
+        'Not started',
+        'In Progress',
+        'Blocked',
+        'Done'
+    };
 
     public class StepSummary {
         @AuraEnabled public Id id;
@@ -107,6 +113,34 @@ public with sharing class MerchantOnboardingController {
         return stepsToCreate.size();
     }
 
+    @AuraEnabled
+    public static void updateStepStatus(Id stepId, String status, String blockedReason) {
+        validateStepId(stepId);
+        if (!VALID_STATUSES.contains(status)) {
+            throw new AuraHandledException('Select a valid onboarding step status.');
+        }
+
+        Onboarding_Step__c step = [
+            SELECT Id, Status__c, Completed_Date__c
+            FROM Onboarding_Step__c
+            WHERE Id = :stepId
+            LIMIT 1
+        ];
+
+        step.Status__c = status;
+        if (status == 'Done') {
+            step.Completed_Date__c = step.Completed_Date__c == null ? Date.today() : step.Completed_Date__c;
+            step.Blocked_Reason__c = null;
+        } else {
+            step.Completed_Date__c = null;
+            step.Blocked_Reason__c = status == 'Blocked' && String.isNotBlank(blockedReason)
+                ? blockedReason.trim()
+                : null;
+        }
+
+        update step;
+    }
+
     @TestVisible
     private static Integer calculateProgressPercent(Integer doneSteps, Integer totalSteps) {
         if (totalSteps == null || totalSteps == 0) {
@@ -127,6 +161,12 @@ public with sharing class MerchantOnboardingController {
     private static void validateAccountId(Id accountId) {
         if (accountId == null || accountId.getSObjectType() != Account.SObjectType) {
             throw new AuraHandledException('A valid Account record Id is required.');
+        }
+    }
+
+    private static void validateStepId(Id stepId) {
+        if (stepId == null || stepId.getSObjectType() != Onboarding_Step__c.SObjectType) {
+            throw new AuraHandledException('A valid Onboarding Step record Id is required.');
         }
     }
 

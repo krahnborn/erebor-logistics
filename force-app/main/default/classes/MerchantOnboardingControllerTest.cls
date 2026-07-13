@@ -62,6 +62,60 @@ private class MerchantOnboardingControllerTest {
     }
 
     @IsTest
+    static void updateStepStatusCompletesAndClearsBlocker() {
+        Account account = new Account(Name = 'Iron Hills Exchange');
+        insert account;
+        Onboarding_Step__c step = new Onboarding_Step__c(
+            Account__c = account.Id,
+            Name = 'KYC Pending',
+            Order__c = 20,
+            Status__c = 'Blocked',
+            Blocked_Reason__c = 'Missing ownership documents.'
+        );
+        insert step;
+
+        Test.startTest();
+        MerchantOnboardingController.updateStepStatus(step.Id, 'Done', 'No longer blocked');
+        Test.stopTest();
+
+        Onboarding_Step__c updatedStep = [
+            SELECT Status__c, Completed_Date__c, Blocked_Reason__c
+            FROM Onboarding_Step__c
+            WHERE Id = :step.Id
+        ];
+        System.assertEquals('Done', updatedStep.Status__c);
+        System.assertEquals(Date.today(), updatedStep.Completed_Date__c);
+        System.assertEquals(null, updatedStep.Blocked_Reason__c);
+    }
+
+    @IsTest
+    static void updateStepStatusSavesBlockedReasonAndClearsCompletion() {
+        Account account = new Account(Name = 'Lake-town Imports');
+        insert account;
+        Onboarding_Step__c step = new Onboarding_Step__c(
+            Account__c = account.Id,
+            Name = 'Trading Setup',
+            Order__c = 30,
+            Status__c = 'Done',
+            Completed_Date__c = Date.today()
+        );
+        insert step;
+
+        Test.startTest();
+        MerchantOnboardingController.updateStepStatus(step.Id, 'Blocked', 'Waiting for settlement account.');
+        Test.stopTest();
+
+        Onboarding_Step__c updatedStep = [
+            SELECT Status__c, Completed_Date__c, Blocked_Reason__c
+            FROM Onboarding_Step__c
+            WHERE Id = :step.Id
+        ];
+        System.assertEquals('Blocked', updatedStep.Status__c);
+        System.assertEquals(null, updatedStep.Completed_Date__c);
+        System.assertEquals('Waiting for settlement account.', updatedStep.Blocked_Reason__c);
+    }
+
+    @IsTest
     static void stalledHelperHonorsThreeDayThresholdAndCompletion() {
         Datetime nowValue = Datetime.newInstance(2026, 7, 13, 12, 0, 0);
 

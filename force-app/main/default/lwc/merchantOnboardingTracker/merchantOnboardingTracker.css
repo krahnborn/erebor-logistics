@@ -167,6 +167,43 @@
     padding: 0.45rem 0.55rem;
 }
 
+.step-actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.65rem;
+}
+
+.status-control {
+    flex: 1 1 11rem;
+    min-width: 11rem;
+}
+
+.blocked-input {
+    display: none;
+    margin-top: 0.65rem;
+}
+
+.blocked-input.visible {
+    align-items: flex-end;
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: minmax(0, 1fr) auto;
+}
+
+@media (max-width: 34rem) {
+    .header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .blocked-input.visible {
+        align-items: stretch;
+        grid-template-columns: 1fr;
+    }
+}
+
 .empty-state,
 .error-state {
     background: #f7f8fa;
