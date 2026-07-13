@@ -1,0 +1,89 @@
+<template>
+    <lightning-card>
+        <div class="shell">
+            <template lwc:if={summary}>
+                <template lwc:if={summary.stalled}>
+                    <div class="stall-banner" role="status">
+                        <lightning-icon icon-name="utility:warning" size="x-small"></lightning-icon>
+                        <span>No onboarding activity in 3+ days</span>
+                    </div>
+                </template>
+
+                <div class="header">
+                    <div class="progress">
+                        <lightning-progress-ring
+                            value={summary.progressPercent}
+                            size="large"
+                            variant={progressVariant}
+                        ></lightning-progress-ring>
+                        <div>
+                            <div class="eyebrow">Merchant onboarding</div>
+                            <div class="percent">{summary.progressPercent}% complete</div>
+                        </div>
+                    </div>
+                    <lightning-button
+                        label="Add standard steps"
+                        variant="neutral"
+                        icon-name="utility:add"
+                        onclick={handleCreateSteps}
+                        disabled={creatingSteps}
+                    ></lightning-button>
+                </div>
+
+                <div class="metrics">
+                    <div>
+                        <span>{summary.doneSteps}</span>
+                        <label>Done</label>
+                    </div>
+                    <div>
+                        <span>{summary.blockedSteps}</span>
+                        <label>Blocked</label>
+                    </div>
+                    <div>
+                        <span>{summary.totalSteps}</span>
+                        <label>Total</label>
+                    </div>
+                </div>
+
+                <template lwc:if={hasSteps}>
+                    <ol class="steps">
+                        <template for:each={summary.steps} for:item="step">
+                            <li key={step.id} class={step.statusClass}>
+                                <div class="step-marker"></div>
+                                <div class="step-body">
+                                    <div class="step-topline">
+                                        <span class="step-name">{step.name}</span>
+                                        <span class="status-pill">{step.status}</span>
+                                    </div>
+                                    <div class="step-meta">
+                                        <span>{step.ownerName}</span>
+                                        <template lwc:if={step.completedDate}>
+                                            <span>Completed {step.completedDate}</span>
+                                        </template>
+                                    </div>
+                                    <template lwc:if={step.blockedReason}>
+                                        <div class="blocked-reason">{step.blockedReason}</div>
+                                    </template>
+                                </div>
+                            </li>
+                        </template>
+                    </ol>
+                </template>
+                <template lwc:else>
+                    <div class="empty-state">
+                        <div>No onboarding steps yet</div>
+                        <span>Add the active standard steps to start tracking this merchant.</span>
+                    </div>
+                </template>
+            </template>
+
+            <template lwc:elseif={errorMessage}>
+                <div class="error-state">{errorMessage}</div>
+            </template>
+
+            <template lwc:else>
+                <lightning-spinner alternative-text="Loading onboarding status" size="small"></lightning-spinner>
+            </template>
+        </div>
+    </lightning-card>
+</template>
