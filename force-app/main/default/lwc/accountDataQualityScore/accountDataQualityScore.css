@@ -1,0 +1,131 @@
+.score-header {
+    align-items: flex-start;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.score-value {
+    color: #181818;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.score-caption,
+.rule-meta,
+.empty-state {
+    color: #5c5c5c;
+    font-size: 0.75rem;
+}
+
+.rule-meta_blocked {
+    color: #8e030f;
+    margin-top: 0.25rem;
+}
+
+.status-badge {
+    --slds-c-badge-radius-border: 999px;
+}
+
+.status-badge_green {
+    --slds-c-badge-color-background: #e4f7e9;
+    --slds-c-badge-text-color: #1f5f2c;
+}
+
+.status-badge_amber {
+    --slds-c-badge-color-background: #fff1d6;
+    --slds-c-badge-text-color: #7a4d00;
+}
+
+.status-badge_red {
+    --slds-c-badge-color-background: #fde7e9;
+    --slds-c-badge-text-color: #8e030f;
+}
+
+.meter {
+    background: #e5e5e5;
+    border-radius: 999px;
+    height: 0.5rem;
+    margin-top: 1rem;
+    overflow: hidden;
+}
+
+.meter span {
+    display: block;
+    height: 100%;
+    min-width: 0.25rem;
+}
+
+.meter_green span {
+    background: #2e844a;
+}
+
+.meter_amber span {
+    background: #dd7a01;
+}
+
+.meter_red span {
+    background: #ba0517;
+}
+
+.rule-list {
+    border-top: 1px solid #e5e5e5;
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+}
+
+.rule-item {
+    align-items: flex-start;
+    border-bottom: 1px solid #e5e5e5;
+    display: flex;
+    gap: 0.625rem;
+    padding: 0.75rem 0;
+}
+
+.rule-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.rule-title {
+    align-items: center;
+    color: #181818;
+    display: flex;
+    font-weight: 600;
+    gap: 0.5rem;
+    justify-content: space-between;
+}
+
+.pill {
+    background: #f3f3f3;
+    border-radius: 999px;
+    color: #444;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    line-height: 1;
+    padding: 0.25rem 0.5rem;
+    white-space: nowrap;
+}
+
+.pill_critical {
+    background: #fde7e9;
+    color: #8e030f;
+}
+
+.empty-state {
+    padding-top: 1rem;
+}
+
+.field-editor {
+    align-items: flex-start;
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: minmax(0, 1fr) auto;
+    margin-top: 0.5rem;
+}
+
+.save-button {
+    margin-top: 0.25rem;
+}
