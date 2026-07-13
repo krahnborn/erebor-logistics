@@ -1893,6 +1893,12 @@
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
+                <componentName>c:merchantOnboardingTracker</componentName>
+                <identifier>c_merchantOnboardingTracker</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
                 <componentInstanceProperties>
                     <name>label</name>
                     <value>Tabs</value>
@@ -1981,12 +1987,6 @@
                 </componentInstanceProperties>
                 <componentName>flexipage:tabset</componentName>
                 <identifier>flexipage_tabset</identifier>
-            </componentInstance>
-        </itemInstances>
-        <itemInstances>
-            <componentInstance>
-                <componentName>c:merchantOnboardingTracker</componentName>
-                <identifier>c_merchantOnboardingTracker</identifier>
             </componentInstance>
         </itemInstances>
         <itemInstances>
