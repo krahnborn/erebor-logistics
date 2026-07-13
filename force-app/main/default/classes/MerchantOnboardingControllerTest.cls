@@ -62,6 +62,54 @@ private class MerchantOnboardingControllerTest {
     }
 
     @IsTest
+    static void createCustomStepAddsNextOrderedStep() {
+        Account account = new Account(Name = 'Grey Havens Trade');
+        insert account;
+        insert new Onboarding_Step__c(
+            Account__c = account.Id,
+            Name = 'Application Received',
+            Order__c = 10,
+            Status__c = 'Done',
+            Completed_Date__c = Date.today()
+        );
+
+        Test.startTest();
+        Id customStepId = MerchantOnboardingController.createCustomStep(account.Id, '  Treasury Review  ');
+        Test.stopTest();
+
+        Onboarding_Step__c customStep = [
+            SELECT Account__c, Name, Order__c, Status__c
+            FROM Onboarding_Step__c
+            WHERE Id = :customStepId
+        ];
+        System.assertEquals(account.Id, customStep.Account__c);
+        System.assertEquals('Treasury Review', customStep.Name);
+        System.assertEquals(20, customStep.Order__c);
+        System.assertEquals('Not started', customStep.Status__c);
+    }
+
+    @IsTest
+    static void createCustomStepRejectsDuplicateNamesForSameAccount() {
+        Account account = new Account(Name = 'Mirkwood Freight');
+        insert account;
+        insert new Onboarding_Step__c(
+            Account__c = account.Id,
+            Name = 'Legal Approval',
+            Order__c = 10,
+            Status__c = 'Not started'
+        );
+
+        Test.startTest();
+        try {
+            MerchantOnboardingController.createCustomStep(account.Id, 'Legal Approval');
+            System.assert(false, 'Expected duplicate custom step creation to fail.');
+        } catch (AuraHandledException expected) {
+            System.assertNotEquals(null, expected.getMessage());
+        }
+        Test.stopTest();
+    }
+
+    @IsTest
     static void updateStepStatusCompletesAndClearsBlocker() {
         Account account = new Account(Name = 'Iron Hills Exchange');
         insert account;

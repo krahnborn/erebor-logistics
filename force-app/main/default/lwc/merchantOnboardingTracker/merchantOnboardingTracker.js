@@ -3,6 +3,7 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { refreshApex } from '@salesforce/apex';
 import getOnboardingSummary from '@salesforce/apex/MerchantOnboardingController.getOnboardingSummary';
 import createMissingStandardSteps from '@salesforce/apex/MerchantOnboardingController.createMissingStandardSteps';
+import createCustomStep from '@salesforce/apex/MerchantOnboardingController.createCustomStep';
 import updateStepStatus from '@salesforce/apex/MerchantOnboardingController.updateStepStatus';
 
 const STATUS_OPTIONS = [
@@ -18,6 +19,8 @@ export default class MerchantOnboardingTracker extends LightningElement {
     summary;
     errorMessage;
     creatingSteps = false;
+    creatingCustomStep = false;
+    customStepName = '';
     updatingStepIds = [];
     wiredSummary;
 
@@ -51,6 +54,10 @@ export default class MerchantOnboardingTracker extends LightningElement {
         return STATUS_OPTIONS;
     }
 
+    get customStepDisabled() {
+        return this.creatingCustomStep || !this.customStepName?.trim();
+    }
+
     async handleCreateSteps() {
         this.creatingSteps = true;
         try {
@@ -76,6 +83,41 @@ export default class MerchantOnboardingTracker extends LightningElement {
             );
         } finally {
             this.creatingSteps = false;
+        }
+    }
+
+    handleCustomStepNameChange(event) {
+        this.customStepName = event.target.value;
+    }
+
+    async handleCreateCustomStep() {
+        if (this.customStepDisabled) {
+            return;
+        }
+
+        this.creatingCustomStep = true;
+        const stepName = this.customStepName.trim();
+        try {
+            await createCustomStep({ accountId: this.recordId, stepName });
+            this.customStepName = '';
+            await refreshApex(this.wiredSummary);
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Custom onboarding step added',
+                    message: `${stepName} is ready to track.`,
+                    variant: 'success'
+                })
+            );
+        } catch (error) {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Could not add custom step',
+                    message: this.reduceError(error),
+                    variant: 'error'
+                })
+            );
+        } finally {
+            this.creatingCustomStep = false;
         }
     }
 

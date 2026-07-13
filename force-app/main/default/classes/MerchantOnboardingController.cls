@@ -114,6 +114,39 @@ public with sharing class MerchantOnboardingController {
     }
 
     @AuraEnabled
+    public static Id createCustomStep(Id accountId, String stepName) {
+        validateAccountId(accountId);
+        String normalizedStepName = validateStepName(stepName);
+
+        List<Onboarding_Step__c> matchingSteps = [
+            SELECT Id
+            FROM Onboarding_Step__c
+            WHERE Account__c = :accountId
+                AND Name = :normalizedStepName
+            LIMIT 1
+        ];
+        if (!matchingSteps.isEmpty()) {
+            throw new AuraHandledException('That onboarding step already exists for this account.');
+        }
+
+        AggregateResult orderResult = [
+            SELECT MAX(Order__c) maxOrder
+            FROM Onboarding_Step__c
+            WHERE Account__c = :accountId
+        ];
+        Decimal maxOrder = (Decimal) orderResult.get('maxOrder');
+
+        Onboarding_Step__c step = new Onboarding_Step__c(
+            Account__c = accountId,
+            Name = normalizedStepName,
+            Order__c = maxOrder == null ? 10 : maxOrder + 10,
+            Status__c = 'Not started'
+        );
+        insert step;
+        return step.Id;
+    }
+
+    @AuraEnabled
     public static void updateStepStatus(Id stepId, String status, String blockedReason) {
         validateStepId(stepId);
         if (!VALID_STATUSES.contains(status)) {
@@ -168,6 +201,17 @@ public with sharing class MerchantOnboardingController {
         if (stepId == null || stepId.getSObjectType() != Onboarding_Step__c.SObjectType) {
             throw new AuraHandledException('A valid Onboarding Step record Id is required.');
         }
+    }
+
+    private static String validateStepName(String stepName) {
+        if (String.isBlank(stepName)) {
+            throw new AuraHandledException('Enter an onboarding step name.');
+        }
+        String normalizedStepName = stepName.trim();
+        if (normalizedStepName.length() > 80) {
+            throw new AuraHandledException('Onboarding step names must be 80 characters or fewer.');
+        }
+        return normalizedStepName;
     }
 
     private static String getStatusClass(String status) {

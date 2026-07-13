@@ -16,6 +16,20 @@
     min-width: 0;
 }
 
+.header-actions {
+    flex: 0 0 auto;
+}
+
+.custom-step {
+    align-items: end;
+    border-top: 1px solid #e6e8ec;
+    display: grid;
+    gap: 0.65rem;
+    grid-template-columns: minmax(0, 1fr) auto;
+    margin-top: 1rem;
+    padding-top: 0.85rem;
+}
+
 .eyebrow {
     color: #5f6673;
     font-size: 0.72rem;
@@ -196,6 +210,11 @@
     .header {
         align-items: stretch;
         flex-direction: column;
+    }
+
+    .custom-step {
+        align-items: stretch;
+        grid-template-columns: 1fr;
     }
 
     .blocked-input.visible {

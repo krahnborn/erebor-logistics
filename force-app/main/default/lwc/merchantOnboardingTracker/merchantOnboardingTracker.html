@@ -21,12 +21,31 @@
                             <div class="percent">{summary.progressPercent}% complete</div>
                         </div>
                     </div>
+                    <div class="header-actions">
+                        <lightning-button
+                            label="Add standard steps"
+                            variant="neutral"
+                            icon-name="utility:add"
+                            onclick={handleCreateSteps}
+                            disabled={creatingSteps}
+                        ></lightning-button>
+                    </div>
+                </div>
+
+                <div class="custom-step">
+                    <lightning-input
+                        type="text"
+                        label="Custom step"
+                        value={customStepName}
+                        onchange={handleCustomStepNameChange}
+                        maxlength="80"
+                    ></lightning-input>
                     <lightning-button
-                        label="Add standard steps"
-                        variant="neutral"
-                        icon-name="utility:add"
-                        onclick={handleCreateSteps}
-                        disabled={creatingSteps}
+                        label="Add custom step"
+                        variant="brand"
+                        icon-name="utility:new"
+                        onclick={handleCreateCustomStep}
+                        disabled={customStepDisabled}
                     ></lightning-button>
                 </div>
 
@@ -117,7 +136,7 @@
                 <template lwc:else>
                     <div class="empty-state">
                         <div>No onboarding steps yet</div>
-                        <span>Add the active standard steps to start tracking this merchant.</span>
+                        <span>Add standard steps or create a custom step to start tracking this merchant.</span>
                     </div>
                 </template>
             </template>
