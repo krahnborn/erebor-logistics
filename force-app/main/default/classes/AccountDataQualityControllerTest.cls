@@ -25,6 +25,7 @@ private class AccountDataQualityControllerTest {
         System.assertEquals('Red', summary.status, 'Missing critical Description keeps the record red.');
         System.assertEquals(4, summary.totalRules);
         System.assertEquals(1, summary.missingCriticalRules);
+        System.assertEquals(true, summary.items[0].editable, 'Updateable fields can be fixed inline.');
     }
 
     @IsTest
@@ -39,6 +40,7 @@ private class AccountDataQualityControllerTest {
         System.assertEquals(0, summary.totalRules);
         System.assertEquals(1, summary.items.size());
         System.assertEquals(false, summary.items[0].configured);
+        System.assertEquals(null, summary.items[0].editable);
     }
 
     private static Data_Quality_Rule__c makeRule(String fieldApiName, String importance, Integer weight, Integer sortOrder) {

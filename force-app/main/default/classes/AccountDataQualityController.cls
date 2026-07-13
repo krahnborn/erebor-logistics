@@ -97,9 +97,11 @@ public with sharing class AccountDataQualityController {
 
         Schema.DescribeFieldResult describeField = accountFields.get(item.fieldApiName).getDescribe();
         item.fieldLabel = describeField.getLabel();
+        item.editable = describeField.isUpdateable();
 
         if (!describeField.isAccessible()) {
             item.complete = false;
+            item.editable = false;
             item.message = 'No field access.';
             return item;
         }
@@ -161,6 +163,7 @@ public with sharing class AccountDataQualityController {
         @AuraEnabled public Decimal weight { get; set; }
         @AuraEnabled public Boolean critical { get; set; }
         @AuraEnabled public Boolean configured { get; set; }
+        @AuraEnabled public Boolean editable { get; set; }
         @AuraEnabled public Boolean complete { get; set; }
         @AuraEnabled public String message { get; set; }
     }
